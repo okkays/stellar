@@ -1,11 +1,10 @@
 use ratatui::{
     buffer::Buffer,
     layout::{Alignment, Rect},
-    style::{Color, Stylize},
-    widgets::{Block, BorderType, Paragraph, Widget},
+    widgets::{canvas::Canvas, Block, BorderType, Widget},
 };
 
-use crate::app::App;
+use crate::{app::App, assets::PointImage};
 
 impl Widget for &App {
     /// Renders the user interface widgets.
@@ -20,20 +19,20 @@ impl Widget for &App {
             .title_alignment(Alignment::Center)
             .border_type(BorderType::Rounded);
 
-        let text = format!(
-            "This is a tui template.\n\
-                Press `Esc`, `Ctrl-C` or `q` to stop running.\n\
-                Press left and right to increment and decrement the counter respectively.\n\
-                Counter: {}",
-            self.counter
-        );
+        PointImage::default();
 
-        let paragraph = Paragraph::new(text)
+        let canvas = Canvas::default()
             .block(block)
-            .fg(Color::Cyan)
-            .bg(Color::Black)
-            .centered();
+            .x_bounds([0.0, 200.0])
+            .y_bounds([0.0, 200.0])
+            .paint(|ctx| {
+                ctx.draw(&PointImage {
+                    filename: String::from("src/images/ship.txt"),
+                    color: ratatui::style::Color::Red,
+                    scale: (3, 1),
+                });
+            });
 
-        paragraph.render(area, buf);
+        canvas.render(area, buf);
     }
 }
