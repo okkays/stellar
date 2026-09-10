@@ -8,6 +8,8 @@ pub struct PointImage {
     pub color: Color,
     /// When reading one point in this dimension, read scale.i points instead
     pub scale: (i32, i32),
+    /// This value is added to each coordinate
+    pub offset: (f64, f64),
 }
 
 // impl Default for PointImage {
@@ -59,7 +61,9 @@ impl PointImage {
         let max_y = address.1 - 1;
         let flipped = coords.iter().map(|c| (c.0, max_y - c.1));
 
-        return flipped.map(|c| (c.0 as f64, c.1 as f64)).collect();
+        return flipped
+            .map(|c| ((c.0 as f64) + self.offset.0, (c.1 as f64) + self.offset.1))
+            .collect();
     }
 }
 
@@ -87,6 +91,7 @@ mod tests {
             filename: String::from("src/images/hi.txt"),
             color: Color::Green,
             scale: (1, 1),
+            offset: (0.0, 0.0),
         };
 
         #[rustfmt::skip]
@@ -103,6 +108,7 @@ mod tests {
             filename: String::from("src/images/hi.txt"),
             color: Color::Reset,
             scale: (1, 1),
+            offset: (0.0, 0.0),
         };
 
         let rect = Rect::new(0, 0, 7, 3);
@@ -130,6 +136,7 @@ mod tests {
             filename: String::from("src/images/hi.txt"),
             color: Color::Reset,
             scale: (3, 1),
+            offset: (0.0, 0.0),
         };
 
         let rect = Rect::new(0, 0, 21, 3);
@@ -157,6 +164,7 @@ mod tests {
             filename: String::from("src/images/hi.txt"),
             color: Color::Reset,
             scale: (1, 3),
+            offset: (0.0, 0.0),
         };
 
         let rect = Rect::new(0, 0, 7, 9);
@@ -185,11 +193,44 @@ mod tests {
     }
 
     #[test]
+    fn draw_offset() {
+        let hi = &PointImage {
+            filename: String::from("src/images/hi.txt"),
+            color: Color::Reset,
+            scale: (1, 1),
+            offset: (5.0, 3.0),
+        };
+
+        let rect = Rect::new(0, 0, 20, 7);
+        let mut buffer = Buffer::empty(rect);
+        let canvas = Canvas::default()
+            .marker(Marker::Dot)
+            .x_bounds([0.0, 19.0])
+            .y_bounds([0.0, 6.0])
+            .paint(|context| {
+                context.draw(hi);
+            });
+        canvas.render(buffer.area, &mut buffer);
+        #[rustfmt::skip]
+        let expected = Buffer::with_lines([
+            "                    ",
+            "     • • •••        ",
+            "     •••  •         ",
+            "     • • •••        ",
+            "                    ",
+            "                    ",
+            "                    ",
+        ]);
+        assert_eq!(buffer, expected);
+    }
+
+    #[test]
     fn draw_scaled() {
         let hi = &PointImage {
             filename: String::from("src/images/hi.txt"),
             color: Color::Reset,
             scale: (2, 2),
+            offset: (0.0, 0.0),
         };
 
         let rect = Rect::new(0, 0, 14, 6);
@@ -213,5 +254,4 @@ mod tests {
         ]);
         assert_eq!(buffer, expected);
     }
-
 }

@@ -31,10 +31,14 @@ pub enum Event {
 /// You can extend this enum with your own custom events.
 #[derive(Clone, Debug)]
 pub enum AppEvent {
-    /// Increment the counter.
-    Increment,
-    /// Decrement the counter.
-    Decrement,
+    /// Go left.
+    Left,
+    /// Go right.
+    Right,
+    /// Go up.
+    Up,
+    /// Go down.
+    Down,
     /// Quit the application.
     Quit,
 }

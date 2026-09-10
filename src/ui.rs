@@ -28,8 +28,9 @@ impl Widget for &App {
             .paint(|ctx| {
                 ctx.draw(&PointImage {
                     filename: String::from("src/images/ship.txt"),
-                    color: ratatui::style::Color::Red,
-                    scale: (3, 1),
+                    color: ratatui::style::Color::Green,
+                    scale: (1, 3),
+                    offset: self.ship_position,
                 });
             });
 

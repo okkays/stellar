@@ -7,8 +7,8 @@ use ratatui::DefaultTerminal;
 pub struct App {
     /// Is the application running?
     pub running: bool,
-    /// Counter.
-    pub counter: u8,
+    /// Ship position.
+    pub ship_position: (f64, f64),
     /// Event handler.
     pub events: EventHandler,
 }
@@ -17,7 +17,7 @@ impl Default for App {
     fn default() -> Self {
         Self {
             running: true,
-            counter: 0,
+            ship_position: (50.0, 50.0),
             events: EventHandler::new(),
         }
     }
@@ -44,8 +44,10 @@ impl App {
                     _ => {}
                 },
                 Event::App(app_event) => match app_event {
-                    AppEvent::Increment => self.increment_counter(),
-                    AppEvent::Decrement => self.decrement_counter(),
+                    AppEvent::Left => self.move_ship((6.0, 0.0)),
+                    AppEvent::Right => self.move_ship((-6.0, 0.0)),
+                    AppEvent::Up => self.move_ship((0.0, 9.0)),
+                    AppEvent::Down => self.move_ship((0.0, -9.0)),
                     AppEvent::Quit => self.quit(),
                 },
             }
@@ -60,8 +62,10 @@ impl App {
             KeyCode::Char('c' | 'C') if key_event.modifiers == KeyModifiers::CONTROL => {
                 self.events.send(AppEvent::Quit)
             }
-            KeyCode::Right => self.events.send(AppEvent::Increment),
-            KeyCode::Left => self.events.send(AppEvent::Decrement),
+            KeyCode::Char('h') => self.events.send(AppEvent::Right),
+            KeyCode::Char('l') => self.events.send(AppEvent::Left),
+            KeyCode::Char('k') => self.events.send(AppEvent::Up),
+            KeyCode::Char('j') => self.events.send(AppEvent::Down),
             // Other handlers you could add here.
             _ => {}
         }
@@ -79,11 +83,7 @@ impl App {
         self.running = false;
     }
 
-    pub fn increment_counter(&mut self) {
-        self.counter = self.counter.saturating_add(1);
-    }
-
-    pub fn decrement_counter(&mut self) {
-        self.counter = self.counter.saturating_sub(1);
+    pub fn move_ship(&mut self, by: (f64, f64)) {
+        self.ship_position = (self.ship_position.0 + by.0, self.ship_position.1 + by.1);
     }
 }
