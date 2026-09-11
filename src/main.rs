@@ -4,6 +4,7 @@ pub mod app;
 pub mod event;
 pub mod ui;
 pub mod point_image;
+pub mod stars;
 
 #[tokio::main]
 async fn main() -> color_eyre::Result<()> {

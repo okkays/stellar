@@ -1,6 +1,6 @@
-use crate::event::{AppEvent, Event, EventHandler};
+use crate::{event::{AppEvent, Event, EventHandler}, stars::Stars, ui::RESOLUTION};
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
-use ratatui::DefaultTerminal;
+use ratatui::{DefaultTerminal, style::Color};
 
 /// Application.
 #[derive(Debug)]
@@ -11,14 +11,23 @@ pub struct App {
     pub ship_position: (f64, f64),
     /// Event handler.
     pub events: EventHandler,
+    pub tick_number: i32,
+    pub stars: Stars,
 }
 
 impl Default for App {
     fn default() -> Self {
         Self {
             running: true,
-            ship_position: (50.0, 50.0),
+            ship_position: ((RESOLUTION.0 / 2) as f64, (RESOLUTION.1 / 2) as f64),
             events: EventHandler::new(),
+            tick_number: 0,
+            stars: Stars {
+                color: Color::White,
+                range: RESOLUTION,
+                saturation: 0.01,
+                stars: Vec::new()
+            }
         }
     }
 }
@@ -26,7 +35,11 @@ impl Default for App {
 impl App {
     /// Constructs a new instance of [`App`].
     pub fn new() -> Self {
-        Self::default()
+        let mut app = Self::default();
+        for _ in 0..RESOLUTION.0 {
+            app.stars.tick();
+        }
+        return app;
     }
 
     /// Run the application's main loop.
@@ -76,7 +89,12 @@ impl App {
     ///
     /// The tick event is where you can update the state of your application with any logic that
     /// needs to be updated at a fixed frame rate. E.g. polling a server, updating an animation.
-    pub fn tick(&self) {}
+    pub fn tick(&mut self) {
+        self.tick_number = (self.tick_number + 1) % 30;
+        if self.tick_number % 10 == 0 {
+            self.stars.tick();
+        }
+    }
 
     /// Set running to false to quit the application.
     pub fn quit(&mut self) {
