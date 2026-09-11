@@ -3,7 +3,7 @@ use crate::app::App;
 pub mod app;
 pub mod event;
 pub mod ui;
-pub mod assets;
+pub mod point_image;
 
 #[tokio::main]
 async fn main() -> color_eyre::Result<()> {

@@ -12,16 +12,6 @@ pub struct PointImage {
     pub offset: (f64, f64),
 }
 
-// impl Default for PointImage {
-//     fn default() -> Self {
-//         return Self {
-//             filename: String::from("error.txt"),
-//             scale: (1, 1),
-//             color: Color::Reset,
-//         };
-//     }
-// }
-
 impl PointImage {
     const ERROR_IMAGE: &str = ".  .\n . \n.  .";
 

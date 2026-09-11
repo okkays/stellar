@@ -4,7 +4,7 @@ use ratatui::{
     widgets::{canvas::Canvas, Block, BorderType, Widget},
 };
 
-use crate::{app::App, assets::PointImage};
+use crate::{app::App, point_image::PointImage};
 
 impl Widget for &App {
     /// Renders the user interface widgets.
