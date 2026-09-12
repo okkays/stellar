@@ -17,9 +17,7 @@ impl Widget for &App {
     // - https://docs.rs/ratatui/latest/ratatui/widgets/index.html
     // - https://github.com/ratatui/ratatui/tree/master/examples
     fn render(self, area: Rect, buf: &mut Buffer) {
-        let block = Block::bordered()
-            .title("stellar")
-            .title_alignment(Alignment::Center)
+        let block = Block::new()
             .border_type(BorderType::Rounded);
 
         PointImage::default();
@@ -31,12 +29,11 @@ impl Widget for &App {
             .y_bounds([0.0, RESOLUTION.1 as f64])
             .paint(|ctx| {
                 ctx.draw(&self.stars);
-                ctx.draw(&PointImage {
-                    filename: String::from("src/images/ship.txt"),
-                    color: Color::LightCyan,
-                    scale: (1, 3),
-                    offset: self.ship_position,
-                });
+                ctx.draw(&PointImage::default()
+                    .filename("src/images/ship.txt")
+                    .color(Color::LightCyan)
+                    .scale((1, 3))
+                    .offset(self.ship_position));
             });
 
         canvas.render(area, buf);
