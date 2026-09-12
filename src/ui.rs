@@ -7,7 +7,7 @@ use ratatui::{
 
 use crate::{app::App, point_image::PointImage};
 
-pub const RESOLUTION: (i32, i32) = (150, 150);
+pub const RESOLUTION: (i32, i32) = (200, 200);
 
 impl Widget for &App {
     /// Renders the user interface widgets.
@@ -31,9 +31,9 @@ impl Widget for &App {
                 ctx.draw(&self.stars_fg);
                 ctx.draw(&self.stars_bg);
                 ctx.draw(&PointImage::default()
-                    .filename("src/images/ship.txt")
+                    .filename("src/images/ship_tardis.txt")
                     .color(Color::LightCyan)
-                    .scale((1, 3))
+                    .scale((1, 2))
                     .offset(self.ship_position));
             });
 
