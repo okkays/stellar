@@ -39,7 +39,7 @@ impl App {
         for _ in 0..RESOLUTION.0 {
             app.stars.tick();
         }
-        return app;
+        app
     }
 
     /// Run the application's main loop.

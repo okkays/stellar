@@ -88,9 +88,9 @@ impl PointImage {
         let max_y = address.1 - 1;
         let flipped = coords.iter().map(|c| (c.0, max_y - c.1));
 
-        return flipped
+        flipped
             .map(|c| ((c.0 as f64) + self.offset.0, (c.1 as f64) + self.offset.1))
-            .collect();
+            .collect()
     }
 }
 
