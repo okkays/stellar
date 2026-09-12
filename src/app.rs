@@ -12,7 +12,8 @@ pub struct App {
     /// Event handler.
     pub events: EventHandler,
     pub tick_number: i32,
-    pub stars: Stars,
+    pub stars_fg: Stars,
+    pub stars_bg: Stars,
 }
 
 impl Default for App {
@@ -22,12 +23,18 @@ impl Default for App {
             ship_position: ((RESOLUTION.0 / 2) as f64, (RESOLUTION.1 / 2) as f64),
             events: EventHandler::new(),
             tick_number: 0,
-            stars: Stars {
+            stars_fg: Stars {
                 color: Color::White,
                 range: RESOLUTION,
-                saturation: 0.01,
+                saturation: 0.005,
                 stars: Vec::new()
-            }
+            },
+            stars_bg: Stars {
+                color: Color::Gray,
+                range: RESOLUTION,
+                saturation: 0.005,
+                stars: Vec::new()
+            },
         }
     }
 }
@@ -37,7 +44,8 @@ impl App {
     pub fn new() -> Self {
         let mut app = Self::default();
         for _ in 0..RESOLUTION.0 {
-            app.stars.tick();
+            app.stars_fg.tick();
+            app.stars_bg.tick();
         }
         app
     }
@@ -91,8 +99,11 @@ impl App {
     /// needs to be updated at a fixed frame rate. E.g. polling a server, updating an animation.
     pub fn tick(&mut self) {
         self.tick_number = (self.tick_number + 1) % 30;
-        if self.tick_number % 10 == 0 {
-            self.stars.tick();
+        if self.tick_number % 15 == 0 {
+            self.stars_bg.tick();
+        }
+        if self.tick_number % 5 == 0 {
+            self.stars_fg.tick();
         }
     }
 

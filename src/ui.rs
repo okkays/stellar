@@ -1,6 +1,6 @@
 use ratatui::{
     buffer::Buffer,
-    layout::{Alignment, Rect},
+    layout::{Rect},
     widgets::{canvas::Canvas, Block, BorderType, Widget},
     style::Color,
 };
@@ -28,7 +28,8 @@ impl Widget for &App {
             .x_bounds([0.0, RESOLUTION.0 as f64])
             .y_bounds([0.0, RESOLUTION.1 as f64])
             .paint(|ctx| {
-                ctx.draw(&self.stars);
+                ctx.draw(&self.stars_fg);
+                ctx.draw(&self.stars_bg);
                 ctx.draw(&PointImage::default()
                     .filename("src/images/ship.txt")
                     .color(Color::LightCyan)
